@@ -1,9 +1,18 @@
 from django.contrib import admin
-from .models import  Quiz
-from .models import Question
-from .models import Option
+from .models import  Quiz,Question,Option
+
 
 # Register your models here.
-admin.site.register(Question)
+
+
+
+class OptionAdmin(admin.StackedInline):
+    model = Option
+
+
+class QuestionAdmin(admin.ModelAdmin):
+    inlines = [OptionAdmin,]
+
+admin.site.register(Question,QuestionAdmin)
 admin.site.register(Quiz)
 admin.site.register(Option)

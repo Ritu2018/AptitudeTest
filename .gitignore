@@ -1,0 +1,17 @@
+# Created by .ignore support plugin (hsz.mobi)
+.gitignore
+.idea/
+AptitudeTest/__pycache__/
+Quiz/__pycache__/
+Quiz/migrations/0001_initial.py
+Quiz/migrations/0002_auto_20180220_2251.py
+Quiz/migrations/0003_auto_20180220_2252.py
+Quiz/migrations/0004_auto_20180220_2302.py
+Quiz/migrations/0005_auto_20180220_2317.py
+Quiz/migrations/0006_auto_20180220_2320.py
+Quiz/migrations/0007_auto_20180220_2321.py
+Quiz/migrations/0008_auto_20180220_2326.py
+Quiz/migrations/0009_auto_20180220_2328.py
+Quiz/migrations/0010_auto_20180220_2329.py
+Quiz/migrations/0011_auto_20180220_2330.py
+Quiz/migrations/__pycache__/

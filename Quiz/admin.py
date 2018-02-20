@@ -15,4 +15,4 @@ class QuestionAdmin(admin.ModelAdmin):
 
 admin.site.register(Question,QuestionAdmin)
 admin.site.register(Quiz)
-admin.site.register(Option)
+#admin.site.register(Option)

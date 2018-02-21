@@ -1,7 +1,22 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
+from django.shortcuts import redirect
+from .models import Profile
 # Create your views here.
 
 
 def index(request):
-    return HttpResponse('Quiz')
+    return HttpResponse('Ritu18')
+
+def UserSignin(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password=request.POST['password']
+        info=Profile.objects.filter(username=username).values('user__password','quiz')
+        if info==None:
+            print('no user ')
+        else:
+            print(info)
+
+
+    return redirect('/')

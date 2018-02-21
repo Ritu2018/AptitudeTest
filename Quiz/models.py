@@ -1,6 +1,6 @@
 from django.db import models
 import datetime
-
+from django.contrib.auth.models import  User
 
 # Create your models here.
 class Quiz(models.Model):
@@ -29,4 +29,9 @@ class Option(models.Model):
     value=models.CharField(max_length=1200)
     is_correct=models.BooleanField(default=False)
 
+class Profile(models.Model):
+    user=models.OneToOneField(User, on_delete=models.CASCADE)
+    college=models.CharField(max_length=200)
+    phone=models.IntegerField
+    quiz=models.ForeignKey(Quiz,on_delete=models.CASCADE)
 #attempt model

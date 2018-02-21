@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import  Quiz,Question,Option
+from .models import  Quiz,Question,Option,Profile
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
 
 # Register your models here.
@@ -21,4 +21,4 @@ class QuizAdmin(NestedModelAdmin):
 admin.site.register(Quiz,QuizAdmin)
 #admin.site.register(Question,QuestionAdmin)
 
-#admin.site.register(Option)
+admin.site.register(Profile)

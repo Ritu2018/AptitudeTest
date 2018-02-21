@@ -12,11 +12,13 @@ def UserSignin(request):
     if request.method == "POST":
         username = request.POST['username']
         password=request.POST['password']
-        info=Profile.objects.filter(username=username).values('user__password','quiz')
-        if info==None:
-            print('no user ')
-        else:
-            print(info)
+        for i in Profile.user:
+            print(i)
+        #info=Profile.objects.filter(=username).values('user__password','quiz')
+        #if info==None:
+         #   print('no user ')
+        #else:
+         #   print(info)
 
 
     return redirect('/')

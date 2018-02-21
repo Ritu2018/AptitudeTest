@@ -30,8 +30,11 @@ class Option(models.Model):
     is_correct=models.BooleanField(default=False)
 
 class Profile(models.Model):
-    user=models.OneToOneField(User, on_delete=models.CASCADE)
+    user=models.OneToOneField(User,related_name='Profile', on_delete=models.CASCADE)
     college=models.CharField(max_length=200)
     phone=models.IntegerField
     quiz=models.ForeignKey(Quiz,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
 #attempt model

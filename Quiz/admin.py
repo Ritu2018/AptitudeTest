@@ -1,18 +1,24 @@
 from django.contrib import admin
 from .models import  Quiz,Question,Option
-
+from nested_inline.admin import NestedStackedInline, NestedModelAdmin
 
 # Register your models here.
 
 
 
-class OptionAdmin(admin.StackedInline):
+class OptionAdmin(NestedStackedInline):
     model = Option
 
+class QuestionAdmin(NestedStackedInline):
+   model = Question
+   inlines = [OptionAdmin,]
 
-class QuestionAdmin(admin.ModelAdmin):
-    inlines = [OptionAdmin,]
 
-admin.site.register(Question,QuestionAdmin)
-admin.site.register(Quiz)
+
+class QuizAdmin(NestedModelAdmin):
+    inlines = [QuestionAdmin,]
+
+admin.site.register(Quiz,QuizAdmin)
+#admin.site.register(Question,QuestionAdmin)
+
 #admin.site.register(Option)

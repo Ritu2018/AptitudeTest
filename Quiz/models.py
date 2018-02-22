@@ -32,7 +32,7 @@ class Option(models.Model):
 class Profile(models.Model):
     user=models.OneToOneField(User,related_name='Profile', on_delete=models.CASCADE)
     college=models.CharField(max_length=200)
-    phone=models.IntegerField
+    phone=models.IntegerField(blank=True,default=0)
     quiz=models.ForeignKey(Quiz,on_delete=models.CASCADE)
 
     def __str__(self):

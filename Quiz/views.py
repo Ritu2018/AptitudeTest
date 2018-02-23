@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 
-from .models import Profile,Question
+from .models import Profile,Question,Option
 
 
 
@@ -37,7 +37,8 @@ def UserSignin(request):
 
 def test(request,quiz):
     template = loader.get_template('test.html')
-    questions=Question.objects.filter(quiz__name=quiz).values('text')
-    print(questions)
+    questions=Question.objects.filter(quiz__name=quiz).values('text','id')
+    for k in questions:
+        options=Option.objects.filter(q)
     return HttpResponse(template.render({'quiz':quiz,'questions':questions}))
 

@@ -5,10 +5,15 @@
     <title>Title</title>
 </head>
 <body>
-qqq
+
 
 
     {{ quiz }}
+
+
+{% for question in questions %}
+    {{ question.text }}
+{% endfor %}
 
 
 

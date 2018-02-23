@@ -6,8 +6,8 @@ from django.http import HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 
-from .models import Profile
-# Create your views here.
+from .models import Profile,Question
+
 
 
 def index(request):
@@ -23,12 +23,12 @@ def UserSignin(request):
             user=User.objects.get(username=username)
             if user.check_password(password):
                 quiz=user.Profile.quiz
-                print(quiz)
-                url = reverse('test', kwargs={'quiz': quiz})
-                print(url)
-                return HttpResponseRedirect(url)
-
-
+                if quiz.active:
+                    print(quiz.active)
+                    print(quiz)
+                    url = reverse('test', kwargs={'quiz': quiz})
+                    print(url)
+                    return HttpResponseRedirect(url)
             else:
                print('wrong password')
         except User.DoesNotExist:
@@ -37,4 +37,7 @@ def UserSignin(request):
 
 def test(request,quiz):
     template = loader.get_template('test.html')
-    return HttpResponse(template.render({'quiz':quiz}))
+    questions=Question.objects.filter(quiz__name=quiz).values('text')
+    print(questions)
+    return HttpResponse(template.render({'quiz':quiz,'questions':questions}))
+

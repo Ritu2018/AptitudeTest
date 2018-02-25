@@ -29,6 +29,10 @@ class Option(models.Model):
     value=models.CharField(max_length=1200)
     is_correct=models.BooleanField(default=False)
 
+    def __str__(self):
+        return Option.value
+
+
 class Profile(models.Model):
     user=models.OneToOneField(User,related_name='Profile', on_delete=models.CASCADE)
     college=models.CharField(max_length=200)
@@ -37,4 +41,10 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+class Answers(models.Model):
+    user=models.ForeignKey(Profile,on_delete=models.CASCADE)
+    question=models.IntegerField(default=0)
+    option_id=models.IntegerField(default=0)
+    right=models.BooleanField(default=False)
 #attempt model

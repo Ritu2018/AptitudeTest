@@ -20,7 +20,6 @@ def UserSignin(request):
     if request.method == "POST":
         username = request.POST['username']
         password=request.POST['password']
-        #print(username, password)
         try:
             current_user = authenticate(username=username, password=password)
             if current_user is not None:
@@ -56,19 +55,17 @@ def score(request):
     if request.method=='POST':
         total= 0
         if request.user.is_authenticated:
-            user=request.user.username
+            user=request.user
             for score_key in filter(lambda key: key.startswith('score'), request.POST.keys()):
-                print(score_key)
                 val=int(request.POST[score_key])
-                print(val)
                 unwanted, question_id = score_key.split('-')
-                print(question_id)
-
                 results=Option.objects.filter(id=val).values('is_correct')
                 for result in results:
                     result=result['is_correct']
-                print(type(user),type(question_id),type(val),type(result))
-                new_tuple = Answers(user, int(question_id), val,result)
+                Profile_inst=Profile.objects.filter(user=user).all().first()
+                print(Profile_inst, type(Profile_inst))
+                new_tuple = Answers(Profile_inst, question_id=int(question_id),option_id= val,right=result)
+
                 new_tuple.save()
                 if result==True:
                     points=Question.objects.filter(id=question_id).values('score')

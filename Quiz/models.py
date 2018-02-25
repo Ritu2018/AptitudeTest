@@ -44,7 +44,7 @@ class Profile(models.Model):
 
 class Answers(models.Model):
     user=models.ForeignKey(Profile,on_delete=models.CASCADE)
-    question=models.IntegerField(default=0)
+    question_id=models.IntegerField(default=0)
     option_id=models.IntegerField(default=0)
     right=models.BooleanField(default=False)
 #attempt model

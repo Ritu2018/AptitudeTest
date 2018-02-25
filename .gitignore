@@ -15,3 +15,4 @@ Quiz/migrations/0009_auto_20180220_2328.py
 Quiz/migrations/0010_auto_20180220_2329.py
 Quiz/migrations/0011_auto_20180220_2330.py
 Quiz/migrations/__pycache__/
+db.sqlite3

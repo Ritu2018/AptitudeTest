@@ -30,7 +30,7 @@ class Option(models.Model):
     is_correct=models.BooleanField(default=False)
 
     def __str__(self):
-        return Option.value
+        return str(Option.value)
 
 
 class Profile(models.Model):

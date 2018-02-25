@@ -10,15 +10,21 @@
 
     {{ quiz }}
 
+<br>
+<form method="post" action="{%  url 'score' %}">
+    {% csrf_token %}
+    {% for question in questions %}
+        {{ question.text }}
+        <br>
+        {%  for option in options %}
+            {% if question.id == option.question_id %}
+                <input  type="radio" name="score-{{question.id}}" value="{{ option.id }}">{{ option.value }}<br>
+                <br>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+    <input type="submit">
+</form>
 
-{% for question in questions %}
-    {{ question.text }}
-    {{ question.id }}
-{% endfor %}
-
-
-
-</body>
-</html>
 </body>
 </html>

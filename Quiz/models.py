@@ -61,3 +61,4 @@ class Result(models.Model):
 
     class Meta:
         ordering=('quiz','-score')
+        unique_together = ('profile', 'quiz')

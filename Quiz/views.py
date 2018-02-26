@@ -41,7 +41,7 @@ def UserSignin(request):
                             print(quiz['name'])
                         #else:
                          #   print('no quiz active')
-                        #url = reverse('test', kwargs={'quiz': quiz})
+                      #url = reverse('test', kwargs={'quiz': quiz})
 
                     return HttpResponse(template.render({'quiz_list':quiz_context}))
 
@@ -49,7 +49,8 @@ def UserSignin(request):
                print('wrong credentials')
         except User.DoesNotExist:
             print('no  such user ')
-    return redirect('/')
+    else:
+        return render(request,'signin.html')
 
 def test(request,quiz):
     questions=Question.objects.filter(quiz__name=quiz).values('text','id')
@@ -90,5 +91,6 @@ def score(request):
     return render(request, 'thankyou.html')
 
 
-
+def quiz_list(request):
+    pass
 

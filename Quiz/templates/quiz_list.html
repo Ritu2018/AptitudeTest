@@ -6,7 +6,7 @@
 </head>
 <body>
     {% for quiz in quiz_list %}
-        {{ quiz }}
+      <a  href="{% url 'quiz_list' %}">{{ quiz }}</a>
     {% endfor %}
 </body>
 </html>

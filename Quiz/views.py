@@ -6,8 +6,8 @@ from django.http import HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from django.template import RequestContext
-from django.contrib.auth import authenticate,login
-
+from django.contrib.auth import authenticate,login,logout
+from django.db import IntegrityError
 from .models import Profile,Question,Option,Answers,Quiz
 
 
@@ -27,17 +27,24 @@ def UserSignin(request):
                     login(request,current_user)
                 user=request.user
                 #print(request.user)
-                user_now=User.objects.get(username=user)
-                quiz=user_now.Profile.quiz
-                if quiz==None:
+                user_now=User.objects.get(username=user) #type User
+                template = loader.get_template('quiz_list.html')
+                quiz_list=user_now.Profile.quiz.values()
+                if len(quiz_list)==0:
                     print('no quiz')
                 else:
-                    #print(quiz)
-                    if quiz.active:
-                        url = reverse('test', kwargs={'quiz': quiz})
-                        return HttpResponseRedirect(url)
-                    else:
-                        print('no quiz active')
+                    quiz_context=[]
+                    for quiz in quiz_list:
+                        print('quiz:',quiz)
+                        if quiz['active']:
+                            quiz_context.append(quiz['name'])
+                            print(quiz['name'])
+                        #else:
+                         #   print('no quiz active')
+                        #url = reverse('test', kwargs={'quiz': quiz})
+
+                    return HttpResponse(template.render({'quiz_list':quiz_context}))
+
             else:
                print('wrong credentials')
         except User.DoesNotExist:
@@ -53,25 +60,33 @@ def test(request,quiz):
 
 def score(request):
     if request.method=='POST':
-        total= 0
-        if request.user.is_authenticated:
-            user=request.user
-            for score_key in filter(lambda key: key.startswith('score'), request.POST.keys()):
-                val=int(request.POST[score_key])
-                unwanted, question_id = score_key.split('-')
-                results=Option.objects.filter(id=val).values('is_correct')
-                for result in results:
-                    result=result['is_correct']
-                Profile_inst=Profile.objects.filter(user=user).all().first()
-                print(Profile_inst, type(Profile_inst))
-                new_tuple = Answers(Profile_inst, question_id=int(question_id),option_id= val,right=result)
+        try:
+            total= 0
+            if request.user.is_authenticated:
+                user=request.user
+                for score_key in filter(lambda key: key.startswith('score'), request.POST.keys()):
+                    val=int(request.POST[score_key])
+                    unwanted, question_id = score_key.split('-')
+                    results=Option.objects.filter(id=val).values('is_correct')
+                    for result in results:
+                        result=result['is_correct']
+                    Profile_inst=Profile.objects.get(user=user)
+                    print(Profile_inst, type(Profile_inst))
+                    new_tuple = Answers(user=Profile_inst, question_id=int(question_id),option_id= val,right=result)
+                    print(new_tuple)
+                    new_tuple.save()
+                    if result==True:
+                        points=Question.objects.filter(id=question_id).values('score')
+                        for point in points:
+                            total=total+point['score']
+                Profile_inst = Profile.objects.get(user=user)
+                Profile_inst.total_score = total
+                Profile_inst.save()
+            print('total:', total)
 
-                new_tuple.save()
-                if result==True:
-                    points=Question.objects.filter(id=question_id).values('score')
-                    for point in points:
-                        total=total+point['score']
-        print('total:', total)
+        except IntegrityError as e:
+            print('already submitted')
+        logout(request)
     return render(request, 'thankyou.html')
 
 

@@ -30,21 +30,25 @@ class Option(models.Model):
     is_correct=models.BooleanField(default=False)
 
     def __str__(self):
-        return str(Option.value)
+        return str(self.value)
 
 
 class Profile(models.Model):
     user=models.OneToOneField(User,related_name='Profile', on_delete=models.CASCADE)
     college=models.CharField(max_length=200)
     phone=models.IntegerField(blank=True,default=0)
-    quiz=models.ForeignKey(Quiz,on_delete=models.CASCADE)
+    quiz=models.ManyToManyField(Quiz)
+    total_score=models.IntegerField(default=0)
 
     def __str__(self):
         return self.user.username
 
 class Answers(models.Model):
     user=models.ForeignKey(Profile,on_delete=models.CASCADE)
-    question_id=models.IntegerField(default=0)
-    option_id=models.IntegerField(default=0)
+    question=models.ForeignKey(Question,on_delete=models.CASCADE)
+    option=models.ForeignKey(Option,on_delete=models.CASCADE)
     right=models.BooleanField(default=False)
+
+    class Meta:
+        unique_together=('user','question','option')
 #attempt model

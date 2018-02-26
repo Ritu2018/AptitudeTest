@@ -45,11 +45,9 @@ def UserSignin(request):
                     return HttpResponse(template.render({'quiz_list':quiz_context}))
 
             else:
-               print('wrong credentials')
+                return HttpResponseForbidden()
         except User.DoesNotExist:
             return HttpResponseForbidden()
-        except User.DoesNotExist:
-            print('no  such user ')
     else:
         return render(request,'signin.html')
 

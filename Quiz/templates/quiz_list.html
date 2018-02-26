@@ -6,7 +6,7 @@
 </head>
 <body>
     {% for quiz in quiz_list %}
-      <a  href="{% url 'test/{{quiz}}' %}">{{ quiz }}</a>
+      <a  href="{% url 'test' quiz=quiz %}">{{ quiz }}</a>
     {% endfor %}
 </body>
 </html>

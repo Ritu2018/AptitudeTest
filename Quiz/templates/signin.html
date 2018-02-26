@@ -4,7 +4,7 @@
     <div class="container">
         <div class="sign-in">
             <h2>Sign in to continue</h2>
-            <form method="post" action="{%  url 'UserSignin' %}">
+            <form method="post" action="{%  url 'UserSignin'  %}">
                 {% csrf_token %}
                 <input type="text" name="username" placeholder="Enter your phone number" required>
                 <input type="password" name="password" placeholder="Enter your password" required>

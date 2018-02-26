@@ -11,7 +11,7 @@
     {{ quiz }}
 
 <br>
-<form method="post" action="{%  url 'score' %}">
+<form method="post" action="{%  url 'score'  quiz=quiz %}">
     {% csrf_token %}
     {% for question in questions %}
         {{ question.text }}

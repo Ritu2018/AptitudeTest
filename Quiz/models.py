@@ -38,7 +38,6 @@ class Profile(models.Model):
     college=models.CharField(max_length=200)
     phone=models.IntegerField(blank=True,default=0)
     quiz=models.ManyToManyField(Quiz)
-    total_score=models.IntegerField(default=0)
 
     def __str__(self):
         return self.user.username
@@ -51,4 +50,14 @@ class Answers(models.Model):
 
     class Meta:
         unique_together=('user','question','option')
-#attempt model
+
+class Result(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    score = models.IntegerField()
+
+    def __str__(self):
+        return str(self.quiz)
+
+    class Meta:
+        ordering=('quiz','-score')

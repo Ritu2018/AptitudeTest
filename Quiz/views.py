@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.template import RequestContext
 from django.contrib.auth import authenticate,login,logout
 from django.db import IntegrityError
-from .models import Profile,Question,Option,Answers,Quiz
+from .models import Profile,Question,Option,Answers,Quiz,Result
 
 
 def index(request):
@@ -58,7 +58,7 @@ def test(request,quiz):
         options+=Option.objects.filter(question_id__exact=question['id']).values('value','question_id','id')
     return render(request, 'test.html',{'quiz':quiz,'questions':questions,'options':options})
 
-def score(request):
+def score(request,quiz):
     if request.method=='POST':
         try:
             total= 0
@@ -71,17 +71,19 @@ def score(request):
                     for result in results:
                         result=result['is_correct']
                     Profile_inst=Profile.objects.get(user=user)
-                    print(Profile_inst, type(Profile_inst))
+                    #print(Profile_inst, type(Profile_inst))
                     new_tuple = Answers(user=Profile_inst, question_id=int(question_id),option_id= val,right=result)
-                    print(new_tuple)
-                    new_tuple.save()
+                    #print(new_tuple)
+
                     if result==True:
                         points=Question.objects.filter(id=question_id).values('score')
                         for point in points:
                             total=total+point['score']
-                Profile_inst = Profile.objects.get(user=user)
-                Profile_inst.total_score = total
-                Profile_inst.save()
+                    Profile_inst = Profile.objects.get(user=user)
+                    quiz_inst=Quiz.objects.get(name=quiz)
+                    new_result=Result(profile=Profile_inst,quiz=quiz_inst,score=total)
+                    new_result.save()
+                    new_tuple.save()
             print('total:', total)
 
         except IntegrityError as e:

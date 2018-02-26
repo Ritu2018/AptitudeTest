@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css?family=Comfortaa:300,400,700|Audiowide|Aldrich');
+body{
+    font-family: 'Comfortaa', cursive !important;
+}
+.dropdown{
+    position: absolute;
+    right:0;
+}
+.container{
+    padding: 5% 15%;
+    margin-bottom: 5%;
+}
+form input{
+    background: none;
+    padding: 0.2em 1em 0.2em 0.5em;
+    width: 90%;
+    border: none;
+    border-bottom: 2px solid #8080804d;
+    margin: 1.5em 1em
+}
+form input:active ,
+form input:focus ,
+form textarea:active,
+form textarea:focus{
+    outline: none;
+    border-bottom: 2px solid #6379f6;
+}
+form select{
+    padding: 0.5em 0.5em 0.5em 1em;
+    margin-left: 0.7em;
+    width: 100%;
+    border-radius: 5px;
+}
+form textarea{
+    margin-left: 3%;
+    background: no-repeat;
+    border: none;
+    border-bottom: 2px solid #8080804d;
+
+}
+input[type=submit]{
+    background-color: #6379f6;
+    padding: 1em;
+    border-radius: 10px;
+    color: white;
+}

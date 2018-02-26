@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -46,9 +46,9 @@ def UserSignin(request):
                     return HttpResponse(template.render({'quiz_list':quiz_context}))
 
             else:
-               print('wrong credentials')
+                return HttpResponseForbidden()
         except User.DoesNotExist:
-            print('no  such user ')
+            return HttpResponseForbidden()
     else:
         return render(request,'signin.html')
 

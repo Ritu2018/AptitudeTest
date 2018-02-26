@@ -1,0 +1,10 @@
+.container .sign-in h2{
+    text-align: center;
+    padding:2%;
+}
+/*form*/
+.sign-in{
+    padding: 3%;
+    box-shadow: 0 0 1px #00000061;
+    border-radius: 10px;
+}

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -9,7 +9,6 @@ from django.template import RequestContext
 from django.contrib.auth import authenticate,login,logout
 from django.db import IntegrityError
 from .models import Profile,Question,Option,Answers,Quiz
-
 
 
 def index(request):
@@ -47,6 +46,8 @@ def UserSignin(request):
 
             else:
                print('wrong credentials')
+        except User.DoesNotExist:
+            return HttpResponseForbidden()
         except User.DoesNotExist:
             print('no  such user ')
     else:
@@ -91,6 +92,6 @@ def score(request):
     return render(request, 'thankyou.html')
 
 
-def quiz_list(request):
+def quiz_list(request,quiz):
     pass
 

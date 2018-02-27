@@ -42,7 +42,7 @@ def UserSignin(request):
                          #   print('no quiz active')
                       #url = reverse('test', kwargs={'quiz': quiz})
 
-                    return HttpResponse(template.render({'quiz_list':quiz_context}))
+                    return HttpResponse(template.render({'quiz_list':quiz_context,'user':user_now}))
 
             else:
                 return HttpResponseForbidden()
@@ -60,6 +60,7 @@ def test(request,quiz):
 
 def score(request,quiz):
     if request.method=='POST':
+        template = loader.get_template('end.html')
         try:
             total= 0
             if request.user.is_authenticated:
@@ -83,15 +84,20 @@ def score(request,quiz):
                     quiz_inst=Quiz.objects.get(name=quiz)
                     new_result=Result(profile=Profile_inst,quiz=quiz_inst,score=total)
                     new_result.save()
+                return HttpResponse(template.render())
 
             print('total:', total)
-
         except IntegrityError as e:
             print('already submitted')
         logout(request)
-    return render(request, 'thankyou.html')
+        return render(request, 'end.html')
+    else:
+        return render(request, 'signin.html')
 
-
-def quiz_list(request,quiz):
+def quiz_list(request):
     pass
+
+def end(request):
+    pass
+
 

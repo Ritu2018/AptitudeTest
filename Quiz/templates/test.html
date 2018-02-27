@@ -16,11 +16,22 @@
     </div>
 {% endblock %}
 {% block body %}
+    <div id="clockdiv">
+
+    <div class="inner-clock">
+        <span class="minutes " style="background-color: rgb(4, 76, 89);">19</span>
+        <div class="smalltext">Minutes</div>
+    </div>
+    <div class="inner-clock">
+        <span class="seconds " style="background-color: rgb(4, 76, 89);">56</span>
+        <div class="smalltext">Seconds</div>
+    </div>
+</div>
 <div class="container">
     <br>
-    <form method="post" action="{%  url 'score' quiz%}">
+    <form method="post" action="{%  url 'score' quiz%}" id="form">
         {% csrf_token %}
-        <h2>{{ quiz_name }}</h2>
+        <h2>{{ quiz_object.name }}</h2>
         {% for question in questions %}
             <div class="question">
             <h5>{{ forloop.counter }}.  {{ question.text }}</h5>
@@ -41,4 +52,48 @@
         <input type="submit">
     </form>
 </div>
+{% endblock %}
+{% block script %}
+    <script>
+        function getTimeRemaining(endtime) {
+          var t = Date.parse(endtime) - Date.parse(new Date());
+          var seconds = Math.floor((t / 1000) % 60);
+          var minutes = Math.floor((t / 1000 / 60) % 60);
+          var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+          var days = Math.floor(t / (1000 * 60 * 60 * 24));
+          return {
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+          };
+        }
+
+        function initializeClock(id, endtime) {
+          var clock = document.getElementById(id);
+          var daysSpan = clock.querySelector('.days');
+          var hoursSpan = clock.querySelector('.hours');
+          var minutesSpan = clock.querySelector('.minutes');
+          var secondsSpan = clock.querySelector('.seconds');
+
+          function updateClock() {
+            var t = getTimeRemaining(endtime);
+
+            minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+            secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+            if (t.total <= 0) {
+              clearInterval(timeinterval);
+              document.getElementById("form").submit();
+            }
+          }
+
+          updateClock();
+          var timeinterval = setInterval(updateClock, 1000);
+        }
+
+        var deadline = new Date(Date.parse(new Date()) + {{ quiz_object.duration.seconds }} * 1000);
+        initializeClock('clockdiv', deadline);
+    </script>
 {% endblock %}

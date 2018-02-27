@@ -54,11 +54,11 @@ def test(request, quiz):
         del request.session['profile']
         return HttpResponseForbidden()
     questions = Question.objects.filter(quiz__id=quiz).values('text', 'id')
-    quiz_name = Quiz.objects.get(id=quiz).name
+    quiz_object= Quiz.objects.get(id=quiz)
     options = []
     for question in questions:
         options += Option.objects.filter(question_id__exact=question['id']).values('value', 'question_id', 'id')
-    return render(request, 'test.html', {'quiz': quiz,'quiz_name':quiz_name, 'questions': questions, 'options': options , 'profile' : profile})
+    return render(request, 'test.html', {'quiz': quiz,'quiz_object':quiz_object, 'questions': questions, 'options': options , 'profile' : profile})
 
 
 def score(request, quiz):

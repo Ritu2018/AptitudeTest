@@ -1,6 +1,13 @@
 .container{
     padding: 5% !important;
 }
+.dropdown{
+    position: relative;
+}
+.navbar-nav{
+    position: absolute;
+    right:0;
+}
 .container h4{
     padding:1%;
     font-family:'Comfortaa', cursive !important;
@@ -106,4 +113,31 @@ input[type=submit]{
     width: 50%;
     left: 25%;
     position: relative;
+}
+/*clock*/
+#clockdiv{
+	font-family: sans-serif;
+	color: #fff;
+	font-weight: 100;
+	text-align: center;
+	font-size: 30px;
+}
+
+#clockdiv > div{
+	padding: 5px;
+	border-radius: 3px;
+	background: #00BF96;
+	display: inline-block;
+}
+
+#clockdiv div > span{
+	padding: 5px;
+	border-radius: 3px;
+	background: #00816A;
+	display: inline-block;
+}
+
+.smalltext{
+	padding-top: 5px;
+	font-size: 10px;
 }

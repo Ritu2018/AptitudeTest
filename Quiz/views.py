@@ -35,7 +35,8 @@ def UserSignin(request):
             profile = Profile.objects.get(phone=request.POST['phone'])
             request.session['profile'] = profile.id
             if timezone.now() > profile.started_atempt + profile.quiz.duration:
-                return render(request, 'signin.html', {'error': 'already participated in the event'})
+                return render(request, 'signin.html', {'error': 'Already participated.',
+                                                       'quiz_list':Quiz.objects.filter(active=True)})
         return redirect('test', quiz=profile.quiz.id)
     else:
         context = {'quiz_list':Quiz.objects.filter(active=True)}

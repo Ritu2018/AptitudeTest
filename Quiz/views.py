@@ -97,7 +97,4 @@ def score(request,quiz):
 def quiz_list(request):
     pass
 
-def end(request):
-    pass
-
 

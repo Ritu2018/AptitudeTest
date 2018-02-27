@@ -1,5 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block link %}
+    <link rel="stylesheet" href="{% static 'signin.css'%}">
+{% endblock %}
 {% block body %}
+    {% if  error %}
+    <div class="error">
+        {{ error }}
+    </div>
+    {% endif %}
     <!--Sigin-->
     <div class="container">
         <div class="sign-in">

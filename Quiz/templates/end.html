@@ -1,8 +1,24 @@
 {% extends 'base.html' %}
-{% block body %}
-    <!--Sigin-->
-  thankyou
+{% load static %}
+{% block link %}
+    <link rel="stylesheet" href="{% static 'quiz_list.css' %}">
 {% endblock %}
+{% block nav-icons %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   Welcome {{ profile.name }}
+                </a>
 
-
-
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+{% block body %}
+    <div class="container" style="text-align: center">
+        <h4>Thankyou for participating</h4>
+        <h5>Your score is : <span><b>{{ span }}</b></span></h5>
+        <h6><i>#happy_ritu</i></h6>
+    </div>
+{% endblock %}

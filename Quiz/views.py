@@ -55,7 +55,7 @@ def test(request, quiz):
     options = []
     for question in questions:
         options += Option.objects.filter(question_id__exact=question['id']).values('value', 'question_id', 'id')
-    return render(request, 'test.html', {'quiz': quiz,'quiz_name':quiz_name, 'questions': questions, 'options': options})
+    return render(request, 'test.html', {'quiz': quiz,'quiz_name':quiz_name, 'questions': questions, 'options': options , 'profile' : profile})
 
 
 def score(request, quiz):

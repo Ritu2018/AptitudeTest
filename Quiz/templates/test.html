@@ -8,7 +8,7 @@
         <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                   Welcome {{ user.username }}
+                   Welcome {{ profile.name }}
                 </a>
 
             </li>
@@ -17,29 +17,28 @@
 {% endblock %}
 {% block body %}
 <div class="container">
-
-
-<br>
-<form method="post" action="{%  url 'score' quiz%}">
-    {% csrf_token %}
-    <h2>{{ quiz_name }}</h2>
-    {% for question in questions %}
-        <div class="question">
-        <h5>{{ forloop.counter }}.  {{ question.text }}</h5>
-        {%  for option in options %}
-            {% if question.id == option.question_id %}
-                <div class="item">
-                    <div class="roundedOne">
-                        <input type="radio" name="score-{{question.id}}" value="{{ option.id }}" id="{{ option.id }}" />
-                        <label for="{{ option.id }}"></label>
+    <br>
+    <form method="post" action="{%  url 'score' quiz%}">
+        {% csrf_token %}
+        <h2>{{ quiz_name }}</h2>
+        {% for question in questions %}
+            <div class="question">
+            <h5>{{ forloop.counter }}.  {{ question.text }}</h5>
+            {%  for option in options %}
+                {% if question.id == option.question_id %}
+                    <div class="item">
+                        <div class="roundedOne">
+                            <input type="radio" name="score-{{question.id}}" value="{{ option.id }}" id="{{ option.id }}" />
+                            <label for="{{ option.id }}"></label>
+                        </div>
+                        <label class="option-name" for="{{ option.id }}"><span>{{ option.value }}</span></label><br>
                     </div>
-                    <label class="option-name" for="{{ option.id }}"><span>{{ option.value }}</span></label><br>
-                </div>
-            {% endif %}
+                {% endif %}
+            {% endfor %}
+            </div>
+            <hr>
         {% endfor %}
-        </div>
-    {% endfor %}
-    <input type="submit">
-</form>
+        <input type="submit">
+    </form>
 </div>
 {% endblock %}

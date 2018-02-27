@@ -93,12 +93,17 @@ input[type=radio]{
     padding: 1%;
 }
 .question{
-    margin-bottom: 4em;
-    margin-left: 1em;
+    margin: 2em;
 }
 .option-name{
     margin-left: 0.5em;
     margin-bottom: 0px;
     font-size: 1.1em;
     cursor: pointer;
+}
+input[type=submit]{
+    cursor: pointer;
+    width: 50%;
+    left: 25%;
+    position: relative;
 }

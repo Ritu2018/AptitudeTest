@@ -2,7 +2,7 @@
 body{
     font-family: 'Comfortaa', cursive !important;
 }
-.dropdown{
+.navbar-nav{
     position: absolute;
     right:0;
 }

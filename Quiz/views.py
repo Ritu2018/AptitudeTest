@@ -1,4 +1,3 @@
-import datetime
 
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
@@ -11,6 +10,9 @@ from django.urls import reverse
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
+from django.utils import timezone
+from django.utils.datetime_safe import datetime
+
 from .models import Profile, Question, Option, Answers, Quiz, Result
 
 
@@ -26,13 +28,13 @@ def UserSignin(request):
             profile.phone = request.POST['phone']
             profile.college = request.POST['college']
             profile.name = request.POST['name']
-            profile.quiz = request.POST['quiz']
+            profile.quiz = Quiz.objects.get(id=int(request.POST['quiz']))
             profile.save()
             request.session['profile'] = profile.id
         except IntegrityError:
             profile = Profile.objects.get(phone=request.POST['phone'])
             request.session['profile'] = profile.id
-            if datetime.datetime.now() > profile.started_atempt + profile.quiz.duration:
+            if timezone.now() > profile.started_atempt + profile.quiz.duration:
                 return render(request, 'signin.html', {'error': 'already participated in the event'})
         return redirect('test', quiz=profile.quiz.id)
     else:
@@ -44,21 +46,23 @@ def test(request, quiz):
     if 'profile' not in request.session:
         return redirect('UserSignin')
     profile = Profile.objects.get(id=request.session['profile'])
-    if datetime.datetime.now() > profile.started_atempt + profile.quiz.duration:
+    if timezone.now() > profile.started_atempt + profile.quiz.duration:
         del request.session['profile']
         return HttpResponseForbidden()
     questions = Question.objects.filter(quiz__id=quiz).values('text', 'id')
+    quiz_name = Quiz.objects.get(id=quiz).name
     options = []
     for question in questions:
         options += Option.objects.filter(question_id__exact=question['id']).values('value', 'question_id', 'id')
-    return render(request, 'test.html', {'quiz': quiz, 'questions': questions, 'options': options})
+    return render(request, 'test.html', {'quiz': quiz,'quiz_name':quiz_name, 'questions': questions, 'options': options})
 
 
 def score(request, quiz):
     if 'profile' not in request.session:
         return redirect('UserSignin')
     profile = Profile.objects.get(id=request.session['profile'])
-    if profile.quiz_id != quiz:
+    if profile.quiz_id != int(quiz):
+        print(quiz , profile.quiz_id)
         return HttpResponseForbidden()
     if request.method == 'POST':
         template = loader.get_template('end.html')
@@ -89,6 +93,7 @@ def score(request, quiz):
             result = Result(quiz_id=quiz, profile=profile,score=total)
             result.save()
         except IntegrityError as e:
+            print("inter")
             return HttpResponseForbidden()
         del request.session['profile']
         return redirect('end')

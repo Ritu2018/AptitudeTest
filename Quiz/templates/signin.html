@@ -9,7 +9,12 @@
                 <input type="text" name="name" placeholder="Enter your name" required>
                 <input type="text" name="phone" placeholder="Enter your phone number" required>
                 <input type="text" name="college" placeholder="Enter your college" required>
-{#                <input type="" name="college" placeholder="Enter your college" required>#}
+                <select name="quiz" id="quiz">
+                    <option value="--">Select the quiz</option>
+                    {% for quiz in quiz_list %}
+                        <option value="{{ quiz.id }}">{{ quiz.name }}</option>
+                    {% endfor %}
+                </select>
                 <input type="submit">
             </form>
         </div>

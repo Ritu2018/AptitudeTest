@@ -1,12 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    {% for quiz in quiz_list %}
-      <a  href="{% url 'test' quiz=quiz %}">{{ quiz }}</a>
-    {% endfor %}
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+{% block link %}
+    <link rel="stylesheet" href="{% static 'quiz_list.css' %}">
+{% endblock %}
+{% block nav-icons %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                   Welcome {{ user.username }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <h4>Select the Quiz you are going to attempt</h4>
+    <!--Questions-->
+        <div class="question">
+            <ul>
+                {% for quiz in quiz_list %}
+                    <li><a  href="{% url 'test' quiz=quiz %}">{{ forloop.counter }} . {{ quiz }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+
+{% endblock %}

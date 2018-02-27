@@ -83,7 +83,7 @@ def score(request,quiz):
                     quiz_inst=Quiz.objects.get(name=quiz)
                     new_result=Result(profile=Profile_inst,quiz=quiz_inst,score=total)
                     new_result.save()
-                    new_tuple.save()
+
             print('total:', total)
 
         except IntegrityError as e:

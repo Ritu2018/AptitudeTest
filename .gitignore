@@ -15,7 +15,6 @@ Quiz/migrations/0009_auto_20180220_2328.py
 Quiz/migrations/0010_auto_20180220_2329.py
 Quiz/migrations/0011_auto_20180220_2330.py
 Quiz/migrations/__pycache__/
-db.sqlite3
 Quiz/migrations/0002_auto_20180222_2041.py
 Quiz/migrations/0003_auto_20180222_2054.py
 Quiz/migrations/0004_auto_20180223_0043.py

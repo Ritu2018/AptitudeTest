@@ -77,20 +77,6 @@ def score(request, quiz):
                 answer.right = val == correct_answer.id
                 answer.save()
                 total+= correct_answer.question.score if correct_answer.id == val else 0
-                # results = Option.objects.filter(id=val).values('is_correct')
-                # for result in results:
-                #     result = result['is_correct']
-                # Profile_inst = profile
-                # new_tuple = Answers(user=Profile_inst, question_id=int(question_id), option_id=val, right=result)
-                # if result == True:
-                #     points = Question.objects.filter(id=question_id).values('score')
-                #     for point in points:
-                #         total = total + point['score']
-                # Profile_inst = Profile.objects.get(user=user)
-                # quiz_inst = Quiz.objects.get(name=quiz)
-                # new_result = Result(profile=Profile_inst, quiz=quiz_inst, score=total)
-                # new_result.save()
-                # new_tuple.save()
             result = Result(quiz_id=quiz, profile=profile,score=total)
             result.save()
         except IntegrityError as e:

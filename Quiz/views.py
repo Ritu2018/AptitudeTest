@@ -60,15 +60,13 @@ def test(request,quiz):
 
 def score(request,quiz):
     if request.method=='POST':
-        template = loader.get_template('logout.html')
+        template = loader.get_template('end.html')
         try:
             total= 0
             if request.user.is_authenticated:
                 user=request.user
                 for score_key in filter(lambda key: key.startswith('score'), request.POST.keys()):
-                    print(score_key)
                     val=int(request.POST[score_key])
-                    print(val)
                     unwanted, question_id = score_key.split('-')
                     results=Option.objects.filter(id=val).values('is_correct')
                     for result in results:
@@ -78,25 +76,23 @@ def score(request,quiz):
                     if result==True:
                         points=Question.objects.filter(id=question_id).values('score')
                         for point in points:
-                            print(point['score'])
                             total=total+point['score']
                     Profile_inst = Profile.objects.get(user=user)
                     quiz_inst=Quiz.objects.get(name=quiz)
                     new_result=Result(profile=Profile_inst,quiz=quiz_inst,score=total)
                     new_result.save()
                     new_tuple.save()
-                return HttpResponse(template,{'total':total})
+                return HttpResponse(template.render())
+
             print('total:', total)
-            logout(request)
-            return render(request, 'logout.html', {'total':total})
         except IntegrityError as e:
             print('already submitted')
-
+        logout(request)
+        return render(request, 'end.html')
     else:
         return render(request, 'signin.html')
 
 def quiz_list(request):
     pass
 
-#def logout(request):
- #   return render(request, 'logout.html')
+

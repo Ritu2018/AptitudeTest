@@ -21,7 +21,10 @@ def index(request):
 
 
 def UserSignin(request):
-    # except related object does no exist user has no profile
+    if 'profile' in request.session:
+        print("hello")
+        profile = Profile.objects.get(id=request.session['profile'])
+        return redirect('test', profile.quiz_id)
     if request.method == "POST":
         try:
             profile = Profile()
@@ -60,15 +63,14 @@ def test(request, quiz):
 
 def score(request, quiz):
     if 'profile' not in request.session:
-        return redirect('UserSignin')
+        return HttpResponseForbidden()
     profile = Profile.objects.get(id=request.session['profile'])
     if profile.quiz_id != int(quiz):
         print(quiz , profile.quiz_id)
         return HttpResponseForbidden()
     if request.method == 'POST':
-        template = loader.get_template('end.html')
+        total = 0
         try:
-            total = 0
             for score_key in filter(lambda key: key.startswith('score'), request.POST.keys()):
                 val = int(request.POST[score_key])
                 unwanted, question_id = score_key.split('-')
@@ -81,12 +83,29 @@ def score(request, quiz):
             result.save()
         except IntegrityError as e:
             print("inter")
-            return HttpResponseForbidden()
+            for score_key in filter(lambda key: key.startswith('score'), request.POST.keys()):
+                val = int(request.POST[score_key])
+                unwanted, question_id = score_key.split('-')
+                correct_answer = Option.objects.get(question_id=question_id, is_correct=True)
+                answer = Answers.objects.get(question_id=question_id, profile=profile)
+                answer.option_id = val
+                answer.right = val == correct_answer.id
+                answer.save()
+                total+= correct_answer.question.score if correct_answer.id == val else 0
+            result = Result(quiz_id=quiz, profile=profile,score=total)
+            result.save()
         del request.session['profile']
+        request.session['score'] = total
+        request.session['name'] = profile.name
         return redirect('end')
     else:
-        return render(request, 'signin.html')
+        return redirect('UserSignin')
 
 
 def end(request):
-    return render(request,"end.html")
+    context = {}
+    context['score'] = request.session['score']
+    context['name'] = request.session['name']
+    del request.session['score']
+    del request.session['name']
+    return render(request,"end.html", context)

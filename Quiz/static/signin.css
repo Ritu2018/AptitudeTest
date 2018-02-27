@@ -19,6 +19,10 @@ form select{
     color: white;
     padding:2%;
 }
+
 input[type=submit]{
     cursor: pointer;
+    width: 50%;
+    left: 25%;
+    position: relative;
 }

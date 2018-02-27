@@ -6,8 +6,10 @@
             <h2>Sign in to continue</h2>
             <form method="post" action="{%  url 'UserSignin'  %}">
                 {% csrf_token %}
-                <input type="text" name="username" placeholder="Enter your phone number" required>
-                <input type="password" name="password" placeholder="Enter your password" required>
+                <input type="text" name="name" placeholder="Enter your name" required>
+                <input type="text" name="phone" placeholder="Enter your phone number" required>
+                <input type="text" name="college" placeholder="Enter your college" required>
+{#                <input type="" name="college" placeholder="Enter your college" required>#}
                 <input type="submit">
             </form>
         </div>

@@ -1,3 +1,6 @@
+import datetime
+
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.http.response import HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect
@@ -6,93 +9,92 @@ from django.http import HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from django.template import RequestContext
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from .models import Profile,Question,Option,Answers,Quiz,Result
+from .models import Profile, Question, Option, Answers, Quiz, Result
 
 
 def index(request):
     return HttpResponse('Ritu18')
 
+
 def UserSignin(request):
-    #except related object does no exist user has no profile
+    # except related object does no exist user has no profile
     if request.method == "POST":
-        username = request.POST['username']
-        password=request.POST['password']
         try:
-            current_user = authenticate(username=username, password=password)
-            if current_user is not None:
-                if current_user.is_active:
-                    login(request,current_user)
-                user=request.user
-                #print(request.user)
-                user_now=User.objects.get(username=user) #type User
-                template = loader.get_template('quiz_list.html')
-                quiz_list=user_now.Profile.quiz.values()
-                if len(quiz_list)==0:
-                    print('no quiz')
-                else:
-                    quiz_context=[]
-                    for quiz in quiz_list:
-                        print('quiz:',quiz)
-                        if quiz['active']:
-                            quiz_context.append(quiz['name'])
-                            print(quiz['name'])
-                        #else:
-                         #   print('no quiz active')
-                      #url = reverse('test', kwargs={'quiz': quiz})
-
-                    return HttpResponse(template.render({'quiz_list':quiz_context,'user':user_now}))
-
-            else:
-                return HttpResponseForbidden()
-        except User.DoesNotExist:
-            return HttpResponseForbidden()
+            profile = Profile()
+            profile.phone = request.POST['phone']
+            profile.college = request.POST['college']
+            profile.name = request.POST['name']
+            profile.quiz = request.POST['quiz']
+            profile.save()
+            request.session['profile'] = profile.id
+        except IntegrityError:
+            profile = Profile.objects.get(phone=request.POST['phone'])
+            request.session['profile'] = profile.id
+            if datetime.datetime.now() > profile.started_atempt + profile.quiz.duration:
+                return render(request, 'signin.html', {'error': 'already participated in the event'})
+        return redirect('test', quiz=profile.quiz.id)
     else:
-        return render(request,'signin.html')
+        context = {'quiz_list':Quiz.objects.filter(active=True)}
+        return render(request, 'signin.html', context)
 
-def test(request,quiz):
-    questions=Question.objects.filter(quiz__name=quiz).values('text','id')
-    options=[]
+
+def test(request, quiz):
+    if 'profile' not in request.session:
+        return redirect('UserSignin')
+    profile = Profile.objects.get(id=request.session['profile'])
+    if datetime.datetime.now() > profile.started_atempt + profile.quiz.duration:
+        del request.session['profile']
+        return HttpResponseForbidden()
+    questions = Question.objects.filter(quiz__id=quiz).values('text', 'id')
+    options = []
     for question in questions:
-        options+=Option.objects.filter(question_id__exact=question['id']).values('value','question_id','id')
-    return render(request, 'test.html',{'quiz':quiz,'questions':questions,'options':options})
+        options += Option.objects.filter(question_id__exact=question['id']).values('value', 'question_id', 'id')
+    return render(request, 'test.html', {'quiz': quiz, 'questions': questions, 'options': options})
 
-def score(request,quiz):
-    if request.method=='POST':
+
+def score(request, quiz):
+    if 'profile' not in request.session:
+        return redirect('UserSignin')
+    profile = Profile.objects.get(id=request.session['profile'])
+    if profile.quiz_id != quiz:
+        return HttpResponseForbidden()
+    if request.method == 'POST':
         template = loader.get_template('end.html')
         try:
-            total= 0
-            if request.user.is_authenticated:
-                user=request.user
-                for score_key in filter(lambda key: key.startswith('score'), request.POST.keys()):
-                    val=int(request.POST[score_key])
-                    unwanted, question_id = score_key.split('-')
-                    results=Option.objects.filter(id=val).values('is_correct')
-                    for result in results:
-                        result=result['is_correct']
-                    Profile_inst=Profile.objects.get(user=user)
-                    new_tuple = Answers(user=Profile_inst, question_id=int(question_id),option_id= val,right=result)
-                    if result==True:
-                        points=Question.objects.filter(id=question_id).values('score')
-                        for point in points:
-                            total=total+point['score']
-                    Profile_inst = Profile.objects.get(user=user)
-                    quiz_inst=Quiz.objects.get(name=quiz)
-                    new_result=Result(profile=Profile_inst,quiz=quiz_inst,score=total)
-                    new_result.save()
-                    new_tuple.save()
-                return HttpResponse(template.render())
-
-            print('total:', total)
+            total = 0
+            for score_key in filter(lambda key: key.startswith('score'), request.POST.keys()):
+                val = int(request.POST[score_key])
+                unwanted, question_id = score_key.split('-')
+                correct_answer = Option.objects.get(question_id=question_id, is_correct=True)
+                answer = Answers(profile=profile, question_id=question_id, option_id=val)
+                answer.right = val == correct_answer.id
+                answer.save()
+                total+= correct_answer.question.score if correct_answer.id == val else 0
+                # results = Option.objects.filter(id=val).values('is_correct')
+                # for result in results:
+                #     result = result['is_correct']
+                # Profile_inst = profile
+                # new_tuple = Answers(user=Profile_inst, question_id=int(question_id), option_id=val, right=result)
+                # if result == True:
+                #     points = Question.objects.filter(id=question_id).values('score')
+                #     for point in points:
+                #         total = total + point['score']
+                # Profile_inst = Profile.objects.get(user=user)
+                # quiz_inst = Quiz.objects.get(name=quiz)
+                # new_result = Result(profile=Profile_inst, quiz=quiz_inst, score=total)
+                # new_result.save()
+                # new_tuple.save()
+            result = Result(quiz_id=quiz, profile=profile,score=total)
+            result.save()
         except IntegrityError as e:
-            print('already submitted')
-        logout(request)
-        return render(request, 'end.html')
+            return HttpResponseForbidden()
+        del request.session['profile']
+        return redirect('end')
     else:
         return render(request, 'signin.html')
 
-def quiz_list(request):
-    pass
 
-
+def end(request):
+    return render(request,"end.html")

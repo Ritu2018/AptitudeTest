@@ -7,5 +7,4 @@ urlpatterns = [
     path('test/<quiz>',views.test,name='test'),
     path('score/<quiz>',views.score, name='score'),
     path('quiz_list',views.quiz_list,name='quiz_list'),
-    path('end',views.end,name='end')
 ]

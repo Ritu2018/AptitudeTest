@@ -22,12 +22,14 @@ class QuizAdmin(NestedModelAdmin):
 class AnswerAdmin(admin.StackedInline):
     model = Answers
 
-class ProfileAdmin(admin.ModelAdmin):
-    inlines = [AnswerAdmin,]
+#class ProfileAdmin(admin.ModelAdmin):
+#    inlines = [AnswerAdmin,]
 
 admin.site.register(Quiz,QuizAdmin)
 #admin.site.register(Question,QuestionAdmin)
 
-admin.site.register(Profile, ProfileAdmin)
+admin.site.register(Profile)
 admin.site.register(Result)
+admin.site.register(Answers)
+
 

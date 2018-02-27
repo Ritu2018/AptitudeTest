@@ -51,6 +51,10 @@ class Answers(models.Model):
     class Meta:
         unique_together=('user','question','option')
 
+    def __str__(self):
+            return str(self.question)
+
+
 class Result(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)

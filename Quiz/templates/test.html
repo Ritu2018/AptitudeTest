@@ -96,7 +96,7 @@
           var timeinterval = setInterval(updateClock, 1000);
         }
 
-        var deadline = new Date(Date.parse(new Date()) + {{ quiz_object.duration.seconds }} * 1000);
+        var deadline = new Date(Math.floor({{ profile.started_atempt.timestamp }}) * 1000 + {{ quiz_object.duration.seconds }} * 1000);
         initializeClock('clockdiv', deadline);
     </script>
 {% endblock %}

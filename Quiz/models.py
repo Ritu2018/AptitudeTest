@@ -22,7 +22,7 @@ class Question(models.Model):
     text = models.TextField()
     score = models.IntegerField(default=1)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-
+    image = models.ImageField(null=True, blank=True)
     def __str__(self):
         return self.text
 

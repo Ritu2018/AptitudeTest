@@ -40,3 +40,5 @@ Quiz/migrations/0008_auto_20180226_2116.py
 Quiz/migrations/0009_auto_20180226_2121.py
 Quiz/migrations/0010_auto_20180226_2127.py
 Quiz/migrations/__init__.py
+
+db.sqlite3

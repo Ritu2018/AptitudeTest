@@ -53,11 +53,11 @@ def test(request, quiz):
     if timezone.now() > profile.started_atempt + profile.quiz.duration:
         del request.session['profile']
         return HttpResponseForbidden()
-    questions = Question.objects.filter(quiz__id=quiz).values('text', 'id')
+    questions = Question.objects.filter(quiz__id=quiz)
     quiz_object= Quiz.objects.get(id=quiz)
     options = []
     for question in questions:
-        options += Option.objects.filter(question_id__exact=question['id']).values('value', 'question_id', 'id')
+        options += Option.objects.filter(question_id__exact=question.id)
     return render(request, 'test.html', {'quiz': quiz,'quiz_object':quiz_object, 'questions': questions, 'options': options , 'profile' : profile})
 
 

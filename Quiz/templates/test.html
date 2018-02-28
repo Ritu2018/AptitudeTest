@@ -35,6 +35,9 @@
         {% for question in questions %}
             <div class="question">
             <h5>{{ forloop.counter }}.  {{ question.text }}</h5>
+            {% if question.image %}
+            <img src="{{ question.image.url }}" style="max-width: 20vw;">
+            {% endif %}
             {%  for option in options %}
                 {% if question.id == option.question_id %}
                     <div class="item">

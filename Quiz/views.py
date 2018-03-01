@@ -20,7 +20,6 @@ def index(request):
 
 def UserSignin(request):
     if 'profile' in request.session:
-        print("hello")
         profile = Profile.objects.get(id=request.session['profile'])
         return redirect('test', profile.quiz_id)
     if request.method == "POST":

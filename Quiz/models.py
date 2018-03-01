@@ -61,7 +61,7 @@ class Answers(models.Model):
         unique_together = ('profile', 'question', 'option')
 
     def __str__(self):
-        return str(self.question)
+        return str(self.profile)
 
 
 class Result(models.Model):
@@ -70,7 +70,7 @@ class Result(models.Model):
     score = models.IntegerField()
 
     def __str__(self):
-        return str(self.quiz)
+        return str(self.quiz) + " | " + str(self.profile) + " : " + str(self.score)
 
     class Meta:
         ordering = ('quiz', '-score')
